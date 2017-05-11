@@ -24,3 +24,22 @@ For each record it is provided:
 
 ## Relevant Analysis
 
+Packages utilized: plyr, data.table
+
+UCI HAR Dataset files used:
+  Subject Files : train/subject_train.txt, test/subject_test.txt
+  Activity Files: test/X_test.txt, train/X_train.txt
+  Features Files: test/y_test.txt, train/y_train.txt
+  features.txt - variable names
+  activity_labels.txt - activity names
+  
+(1) Read above files with read.table to create data tables. 
+(2) Merge data tables on subject, activity, and features using rbind.
+(3) Merge resulting data tables using features.txt (V2) to provide variable names along with "subject" and "activity" using cbind. 
+(4) Use grep to subset Standard Deviation (std) and Mean (mean) measurements.
+(5) Use activity_labels.txt to provide variable names for $activity.
+(6) Use gsub to replace abbreviations in variable names with descriptive labels
+(7) Use aggregate to summarize data and produce mean
+(8) Use write.table to create tidy.data.txt
+
+  
