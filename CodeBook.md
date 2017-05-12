@@ -1,45 +1,47 @@
-# Codebook for datacleaning.R as applied to the UCI HAR Dataset
+# Codebook 
 
-## Original Data Set
+## Data Set
 
-Human Activity Recognition Using Smartphones Dataset
-Version 1.0
-Jorge L. Reyes-Ortiz, Davide Anguita, Alessandro Ghio, Luca Oneto.
-Smartlab - Non Linear Complex Systems Laboratory
-DITEN - Universit‡ degli Studi di Genova.
-Via Opera Pia 11A, I-16145, Genoa, Italy.
-activityrecognition@smartlab.ws
-www.smartlab.ws
+Data Source: https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip
+Data Description: http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones
 
-The experiments have been carried out with a group of 30 volunteers within an age bracket of 19-48 years. Each person performed six activities (WALKING, WALKING_UPSTAIRS, WALKING_DOWNSTAIRS, SITTING, STANDING, LAYING) wearing a smartphone (Samsung Galaxy S II) on the waist. Using its embedded accelerometer and gyroscope, we captured 3-axial linear acceleration and 3-axial angular velocity at a constant rate of 50Hz. The experiments have been video-recorded to label the data manually. The obtained dataset has been randomly partitioned into two sets, where 70% of the volunteers was selected for generating the training data and 30% the test data. 
 
-The sensor signals (accelerometer and gyroscope) were pre-processed by applying noise filters and then sampled in fixed-width sliding windows of 2.56 sec and 50% overlap (128 readings/window). The sensor acceleration signal, which has gravitational and body motion components, was separated using a Butterworth low-pass filter into body acceleration and gravity. The gravitational force is assumed to have only low frequency components, therefore a filter with 0.3 Hz cutoff frequency was used. From each window, a vector of features was obtained by calculating variables from the time and frequency domain. See 'features_info.txt' for more details. 
+## Analysis
 
-For each record it is provided:
-- Triaxial acceleration from the accelerometer (total acceleration) and the estimated body acceleration.
-- Triaxial Angular velocity from the gyroscope. 
-- A 561-feature vector with time and frequency domain variables. 
-- Its activity label. 
-- An identifier of the subject who carried out the experiment.
+The script run_analysis.R merges and cleans up data and produces requested tidy data sets.
 
-## Relevant Analysis
+(1) Download, read, and merge test and train data tables provided in UCI HAR Dataset
+(2) Read features.txt to provide variable names and bind to merged data set
+(3) Extract measurements on mean and standard deviation for each measurement in merged data set using grep()
+(4) Read activity_labels.txt to provide descriptive activity names for subset of merged data set
+(5) Appropriately label this data set with descriptive variable names, removing hyphens and parantheses and replacing abbreviations with full terms. 
+(6) Use aggregate to create a tidy data set of the average of each measurement by subject and by activity. The result is saved as a text file: tidy.data.txt. 
 
-Packages utilized: plyr, data.table
+## Variables
 
-UCI HAR Dataset files used:
-  Subject Files : train/subject_train.txt, test/subject_test.txt
-  Activity Files: test/X_test.txt, train/X_train.txt
-  Features Files: test/y_test.txt, train/y_train.txt
-  features.txt - variable names
-  activity_labels.txt - activity names
-  
-(1) Read above files with read.table to create data tables. 
-(2) Merge data tables on subject, activity, and features using rbind.
-(3) Merge resulting data tables using features.txt (V2) to provide variable names along with "subject" and "activity" using cbind. 
-(4) Use grep to subset Standard Deviation (std) and Mean (mean) measurements.
-(5) Use activity_labels.txt to provide variable names for $activity.
-(6) Use gsub to replace abbreviations in variable names with descriptive labels
-(7) Use aggregate to summarize data and produce mean
-(8) Use write.table to create tidy.data.txt
+fileUrl - the url where the UCI HAR Dataset is stored online
+path - a shortcut to the UCI HAR Dataset's location in the working directory
+data.train.features - data table of X_train.txt
+data.train.activity - data table of y_train.txt
+data.train.subject - data table of subject_train.txt
+data.test.features - data table of X_test.txt
+data.test.activity - data table of y_test.txt
+data.test.subject - data table of subject_test.txt
+data.features - merged data.train.features and data.test.features
+data.activity - merged data.train.activity and data.test.activity
+data.subject - merged data.train.subject and data.test.subject
+features.names - data table of features.txt contents
+merged.data - merged data.features, data.subject, and data.activity after names(data.features) has been replaced by features.names$V2
+mean_std.features.names - features.names$V2 entries that include "mean\\(\\)" or "std\\(\\)"
+subset.features.names - vector of mean_std.features.names,"subject", and "activity"
+data.subset - subset of merged data using subset.features.names vector
+activity.labels - data table of activity_labels.txt
+tidy.data - data table created by aggregating data.subset and returning the mean, ordered by $activity then $subject
 
-  
+## Returned Output
+
+tidy.data.txt - 180 (observations) x 68 (variables) data frame
+1st column - subject id (1-30)(integer)
+2nd column - type of activity (labeled according to activity_labels.txt)(character)
+3-68 columns - measurements (numeric)
+
